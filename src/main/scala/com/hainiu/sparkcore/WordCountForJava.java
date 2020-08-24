@@ -58,10 +58,15 @@ public class WordCountForJava {
         //collect是action算子，当执行collect，会把executor端mapValuesRdd的数据全部拉取到driver端
         //因为是把executor端数据全部拉取回来，如果driver端的内存不够，那就会造成内存溢出了
         //注意使用collect的时候，要知道executor端拉取的数据量情况。
-        List<Tuple2<String,Integer>> list = mapValueRdd.collect();
+//        List<Tuple2<String,Integer>> list = mapValueRdd.collect();
+//        for (Tuple2<String,Integer> t :list){
+//            System.out.println(t);
+//        }
+        //take是拉取回来两条 
+        List<Tuple2<String,Integer>> list = mapValueRdd.take(2);
         for (Tuple2<String,Integer> t :list){
             System.out.println(t);
-            //
         }
+        
     }
 }
