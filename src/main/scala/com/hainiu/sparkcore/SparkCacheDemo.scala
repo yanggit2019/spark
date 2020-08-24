@@ -10,10 +10,13 @@ object SparkCacheDemo{
   //local[N]:利用N个核数运算
   val sparkConf: SparkConf = new SparkConf().setAppName("SparkCacheDemo").setMaster("local[*]")
   val sc = new SparkContext(sparkConf)
-  val rdd: RDD[String] = sc.textFile("H:\\input1")
+    //当没有设置用户期望分区数，那默认期望分区数是2
+  val rdd: RDD[String] = sc.textFile("H:\\input")
+    
+    println(s"rdd分区数：${rdd.getNumPartitions}" )
     val rdd2: RDD[(String, Int)] = rdd.flatMap(_.split("\t")).map(
       f => {
-        println(s"f:${f}")
+//        println(s"f:${f}")
         (f, 1)
       }
     )
