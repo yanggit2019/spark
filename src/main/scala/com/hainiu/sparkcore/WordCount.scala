@@ -2,8 +2,6 @@ package com.hainiu.sparkcore
 
 
 
-import org.apache.hadoop.conf.Configuration
-import org.apache.hadoop.fs.{FileSystem, Path}
 import org.apache.spark.rdd.RDD
 import org.apache.spark.{SparkConf, SparkContext}
 
@@ -23,13 +21,17 @@ object WordCount {
     //将内容写入文件
     val res2: RDD[String] = resRdd.map(f => s"${f._1}\t${f._2}")
     val outputDir = "/tmp/spark/output"
-    val hadoopConf = new Configuration
-    val fs:FileSystem = FileSystem.get(hadoopConf)
-    val outputPath = new Path(outputDir)
-    if (fs.exists(outputPath)){
-      fs.delete(outputPath,true)
-      println(s"delete outputpath:[${outputDir} success!]")
-    }
+    //引入隐式转换函数实现给字符串赋予能删除hdfs的功能
+    import com.hainiu.util.MyPredef.string2HDFSUtil
+    outputDir.deleteHdfs()
+    //删除hdfs上输出目录
+//    val hadoopConf = new Configuration
+//    val fs:FileSystem = FileSystem.get(hadoopConf)
+//    val outputPath = new Path(outputDir)
+//    if (fs.exists(outputPath)){
+//      fs.delete(outputPath,true)
+//      println(s"delete outputpath:[${outputDir} success!]")
+//    }
     //把rdd数据写入到hdfs上
     res2.saveAsTextFile(outputDir)
     
