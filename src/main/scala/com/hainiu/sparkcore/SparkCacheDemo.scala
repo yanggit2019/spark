@@ -18,5 +18,6 @@ object SparkCacheDemo{
       }
     )
     rdd2.count()
+    rdd2.count()
   }
 }
