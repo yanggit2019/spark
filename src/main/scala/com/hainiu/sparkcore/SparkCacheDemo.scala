@@ -17,7 +17,8 @@ object SparkCacheDemo{
         (f, 1)
       }
     )
-    rdd2.count()
-    rdd2.count()
+    val cache: rdd2.type = rdd2.cache()
+    cache.count()
+    cache.count()
   }
 }
