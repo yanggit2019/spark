@@ -20,6 +20,8 @@ object WordCount {
 //    println(arr.toBuffer)
     //将内容写入文件
     val res2: RDD[String] = resRdd.map(f => s"${f._1}\t${f._2}")
+    //打印rdd的依赖关系
+    println(res2.toDebugString)
     val outputDir = "/tmp/spark/output"
     //引入隐式转换函数实现给字符串赋予能删除hdfs的功能
     import com.hainiu.util.MyPredef.string2HDFSUtil
@@ -34,6 +36,8 @@ object WordCount {
 //    }
     //把rdd数据写入到hdfs上
     res2.saveAsTextFile(outputDir)
+    //debug 
+    println("aaaaa")
     
   }
 }
