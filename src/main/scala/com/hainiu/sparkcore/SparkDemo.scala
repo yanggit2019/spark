@@ -24,6 +24,7 @@ object SparkDemo {
 //    })
 //    val arr2: Array[Int] = rdd2.collect()
 //    println(arr2.toBuffer)
+    
     val rdd: RDD[Int] = sc.parallelize(1 to 100, 2)
 //    rdd.map(f =>{
 //      println("创建连接")
