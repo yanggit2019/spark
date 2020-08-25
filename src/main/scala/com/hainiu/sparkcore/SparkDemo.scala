@@ -16,7 +16,9 @@ object SparkDemo {
     //    println(arr1.toBuffer) 
     val rdd2: RDD[Int] = rdd.mapPartitionsWithIndex((index, it) => {
       val list1: List[Int] = it.toList
+      //输出的是每个分区的数据
       println(s"${index}: ${list1}")
+      //给每个分区里面的每个元素*10，返回新的数据集
       val it2: List[Int] = list1.map(f => f * 10)
       it2.toIterator
     })
