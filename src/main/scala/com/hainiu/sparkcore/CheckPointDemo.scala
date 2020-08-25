@@ -14,10 +14,12 @@ object CheckPointDemo {
       println(s"f:${f}")
       f * 10
     })
+    //通过cache防止追溯
+    val cache: rdd2.type = rdd2.cache()
     
     //checkpoint是转换算子
     //当执行checkpoint时，会向上追溯
-    val cp: Unit = rdd2.checkpoint()
-    rdd2.count()
+    cache.checkpoint()
+    cache.count()
   }
 }
