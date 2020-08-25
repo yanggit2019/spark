@@ -14,8 +14,10 @@ object CheckPointDemo {
       println(s"f:${f}")
       f * 10
     })
+    
     //checkpoint是转换算子
+    //当执行checkpoint时，会向上追溯
     val cp: Unit = rdd2.checkpoint()
-//    rdd2.count()
+    rdd2.count()
   }
 }
