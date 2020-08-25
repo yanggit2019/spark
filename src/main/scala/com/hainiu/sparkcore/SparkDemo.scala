@@ -15,8 +15,10 @@ object SparkDemo {
     //    }).collect()
     //    println(arr1.toBuffer) 
     val rdd2: RDD[Int] = rdd.mapPartitionsWithIndex((index, it) => {
-      println(s"${index}: ${it.toList}")
-      it
+      val list1: List[Int] = it.toList
+      println(s"${index}: ${list1}")
+      val it2: List[Int] = list1.map(f => f * 10)
+      it2.toIterator
     })
     val arr2: Array[Int] = rdd2.collect()
     println(arr2.toBuffer)
