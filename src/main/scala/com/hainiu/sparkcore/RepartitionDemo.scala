@@ -13,6 +13,9 @@ object RepartitionDemo {
       println(s"f:${f}")
       (f, 1)
     })
-    pairRdd.count()
+    val rdd2: RDD[(Int, Int)] = pairRdd.repartition(5)
+    println(s"增加分区后分区数:${rdd2.getNumPartitions}")
+    println(rdd2.toDebugString)
+    rdd2.count()
   }
 }
