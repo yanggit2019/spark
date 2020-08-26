@@ -19,7 +19,10 @@ object RepartitionDemo {
     //coalesce是窄依赖，不会产生新阶段
     val rdd3: RDD[(Int, Int)] = rdd2.coalesce(3)
     println(s"减少分区后分区数：${rdd3.getNumPartitions}")
-    println(rdd3.toDebugString)
-    rdd3.count()
+
+    val rdd4: RDD[(Int, Int)] = rdd3.reduceByKey(_ + _)
+    println(s"reduceByKey后分区数: ${rdd4.getNumPartitions}")
+    println(rdd4.toDebugString)
+    rdd4.count()
   }
 }
