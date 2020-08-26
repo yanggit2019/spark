@@ -13,9 +13,13 @@ object RepartitionDemo {
       println(s"f:${f}")
       (f, 1)
     })
+    //repartition是宽依赖，划分阶段会断开，会产生新阶段
     val rdd2: RDD[(Int, Int)] = pairRdd.repartition(5)
     println(s"增加分区后分区数:${rdd2.getNumPartitions}")
-    println(rdd2.toDebugString)
-    rdd2.count()
+    //coalesce是窄依赖，不会产生新阶段
+    val rdd3: RDD[(Int, Int)] = rdd2.coalesce(3)
+    println(s"减少分区后分区数：${rdd3.getNumPartitions}")
+    println(rdd3.toDebugString)
+    rdd3.count()
   }
 }
