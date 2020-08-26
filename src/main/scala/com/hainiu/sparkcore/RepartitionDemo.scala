@@ -20,7 +20,7 @@ object RepartitionDemo {
     val rdd3: RDD[(Int, Int)] = rdd2.coalesce(3)
     println(s"减少分区后分区数：${rdd3.getNumPartitions}")
 
-    val rdd4: RDD[(Int, Int)] = rdd3.reduceByKey(_ + _)
+    val rdd4: RDD[(Int, Int)] = rdd3.reduceByKey(_ + _,1)
     println(s"reduceByKey后分区数: ${rdd4.getNumPartitions}")
     println(rdd4.toDebugString)
     rdd4.count()
