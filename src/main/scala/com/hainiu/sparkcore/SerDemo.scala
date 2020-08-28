@@ -7,7 +7,13 @@ import org.apache.spark.{SparkConf, SparkContext}
 object SerDemo {
   def main(args: Array[String]): Unit = {
     val SparkConf: SparkConf = new SparkConf().setMaster("local[*]").setAppName("SerDemo")
+    //开启Kryo序列化
     SparkConf.set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
+    //要求主动注册
+    SparkConf.set("spark.kryo.registrationRequired","true")
+   
+    
+    
     val sc = new SparkContext(SparkConf)
     val rdd: RDD[String] = sc.parallelize(List("aa", "aa", "bb", "aa"), 2)
     val broad: Broadcast[UserInfo] = sc.broadcast(new UserInfo)
