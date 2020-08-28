@@ -19,7 +19,7 @@ object RepartitionDemo {
     //coalesce是窄依赖，不会产生新阶段
     val rdd3: RDD[(Int, Int)] = rdd2.coalesce(3)
     println(s"减少分区后分区数：${rdd3.getNumPartitions}")
-
+    //可以利用rdd算子中的partitionNum个数来实现重新分区
     val rdd4: RDD[(Int, Int)] = rdd3.reduceByKey(_ + _,1)
     println(s"reduceByKey后分区数: ${rdd4.getNumPartitions}")
     println(rdd4.toDebugString)
