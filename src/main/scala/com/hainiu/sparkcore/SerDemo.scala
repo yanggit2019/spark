@@ -1,5 +1,6 @@
 package com.hainiu.sparkcore
 
+import org.apache.hadoop.io.Text
 import org.apache.spark.broadcast.Broadcast
 import org.apache.spark.rdd.RDD
 import org.apache.spark.{SparkConf, SparkContext}
@@ -11,7 +12,17 @@ object SerDemo {
     SparkConf.set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
     //要求主动注册
     SparkConf.set("spark.kryo.registrationRequired","true")
-   
+   //第一种方式注册
+   val classes: Array[Class[_]] = Array[Class[_]](classOf[UserInfo]
+      ,classOf[Text]
+      ,Class.forName("scala.collection.mutable.WrappedArray$ofRef")
+      ,classOf[Array[Int]],classOf[Array[String]]
+      ,Class.forName("scala.reflect.ClassTag$$anon$1")
+     ,Class.forName("java.lang.Class")
+     ,classOf[Array[UserInfo]]
+   )
+    // 将上面的类注册
+    SparkConf.registerKryoClasses(classes)
     
     
     val sc = new SparkContext(SparkConf)
