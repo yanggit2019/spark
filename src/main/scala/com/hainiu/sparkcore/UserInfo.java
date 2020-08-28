@@ -2,7 +2,9 @@ package com.hainiu.sparkcore;
 
 import org.apache.hadoop.io.Text;
 
-public class UserInfo {
+import java.io.Serializable;
+
+public class UserInfo implements Serializable {
     private String name = "hainiu"; // java实现了序列化
 
     private int age = 10;  // java实现了序列化
