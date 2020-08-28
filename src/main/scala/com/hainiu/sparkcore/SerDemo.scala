@@ -1,8 +1,10 @@
 package com.hainiu.sparkcore
 
+import com.esotericsoftware.kryo.Kryo
 import org.apache.hadoop.io.Text
 import org.apache.spark.broadcast.Broadcast
 import org.apache.spark.rdd.RDD
+import org.apache.spark.serializer.KryoRegistrator
 import org.apache.spark.{SparkConf, SparkContext}
 
 object SerDemo {
@@ -13,17 +15,17 @@ object SerDemo {
     //要求主动注册
     SparkConf.set("spark.kryo.registrationRequired","true")
    //第一种方式注册
-   val classes: Array[Class[_]] = Array[Class[_]](classOf[UserInfo]
-      ,classOf[Text]
-      ,Class.forName("scala.collection.mutable.WrappedArray$ofRef")
-      ,classOf[Array[Int]],classOf[Array[String]]
-      ,Class.forName("scala.reflect.ClassTag$$anon$1")
-     ,Class.forName("java.lang.Class")
-     ,classOf[Array[UserInfo]]
-   )
+//   val classes: Array[Class[_]] = Array[Class[_]](classOf[UserInfo]
+//      ,classOf[Text]
+//      ,Class.forName("scala.collection.mutable.WrappedArray$ofRef")
+//      ,classOf[Array[Int]],classOf[Array[String]]
+//      ,Class.forName("scala.reflect.ClassTag$$anon$1")
+//     ,Class.forName("java.lang.Class")
+//     ,classOf[Array[UserInfo]]
+//   )
     // 将上面的类注册
-    SparkConf.registerKryoClasses(classes)
-    
+//    SparkConf.registerKryoClasses(classes)
+    SparkConf.set("spark.kryo.registrator",classOf[MyRegistrator].getName)
     
     val sc = new SparkContext(SparkConf)
     val rdd: RDD[String] = sc.parallelize(List("aa", "aa", "bb", "aa"), 2)
@@ -39,5 +41,16 @@ object SerDemo {
     for (t <- arr){
       println(t)
     }
+  }
+}
+class MyRegistrator extends KryoRegistrator{
+  override def registerClasses(kryo: Kryo): Unit = {
+    kryo.register(classOf[UserInfo])
+    kryo.register(classOf[Text])
+    kryo.register(Class.forName("scala.collection.mutable.WrappedArray$ofRef"))
+    kryo.register(classOf[Array[UserInfo]])
+    kryo.register(classOf[Array[String]])
+    kryo.register(Class.forName("java.lang.Class"))
+    kryo.register(Class.forName("scala.reflect.ClassTag$$anon$1"))
   }
 }
