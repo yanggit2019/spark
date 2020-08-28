@@ -1,3 +1,5 @@
+package com.hainiu.sparkcore
+
 import com.hainiu.util.{OrcFormat, OrcUtil}
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.hive.ql.io.orc.{OrcNewInputFormat, OrcNewOutputFormat, OrcStruct}
@@ -10,7 +12,7 @@ import org.xerial.snappy.SnappyCodec
 
 import scala.collection.mutable.ListBuffer
 import scala.io.Source
-
+class MapJoin
 object MapJoin {
   def main(args: Array[String]): Unit = {
     val sparkConf: SparkConf = new SparkConf().setMaster("local[*]").setAppName("mapjoin")
