@@ -3,7 +3,7 @@ package com.hainiu.hbase
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.hbase.client.{Connection, ConnectionFactory, HTable}
 import org.apache.hadoop.hbase.io.ImmutableBytesWritable
-import org.apache.hadoop.hbase.mapreduce.HFileOutputFormat2
+import org.apache.hadoop.hbase.mapreduce.{HFileOutputFormat2, LoadIncrementalHFiles}
 import org.apache.hadoop.hbase.util.Bytes
 import org.apache.hadoop.hbase.{HBaseConfiguration, KeyValue, TableName}
 import org.apache.hadoop.mapreduce.Job
@@ -18,6 +18,7 @@ object SparkHbase6Hfile {
     //开启Kryo序列化
     sparkConf.set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
     val sc = new SparkContext(sparkConf)
+    val hbaseTableNam:String = "lyy23:spark_load"
      
     val rdd: RDD[Int] = sc.parallelize(10 until 20, 2)
     //rdd[Int]--->rdd【(key(可以实现二次比较),keyValue)】
@@ -39,7 +40,7 @@ object SparkHbase6Hfile {
     val writeHfileRdd: RDD[(ImmutableBytesWritable, KeyValue)] = sortRdd.map(f => (f._1.rowkey, f._2))
     val hbaseConf: Configuration = HBaseConfiguration.create()
     val conn: Connection = ConnectionFactory.createConnection(hbaseConf)
-    val table: HTable = conn.getTable(TableName.valueOf("lyy23:spark_load")).asInstanceOf[HTable]
+    val table: HTable = conn.getTable(TableName.valueOf(hbaseTableNam)).asInstanceOf[HTable]
     val job: Job = Job.getInstance(hbaseConf)
     //加载能写入hfile文件的配置
     HFileOutputFormat2.configureIncrementalLoad(job,table.getTableDescriptor,table.getRegionLocator)
@@ -51,8 +52,14 @@ object SparkHbase6Hfile {
       classOf[ImmutableBytesWritable],
       classOf[KeyValue],
       classOf[HFileOutputFormat2],
-      hbaseConf
+      job.getConfiguration
     )
+    //本地无法运行，需要打包上集群
+    //将生成的hfile文件导入到hbase表中，参考下面的导入命令
+    //hadoop jar /usr/local/hbase/lib/hbase-shell-1.3.1.jar completebulkload /user/panniu/spark/hbase_bulk_output panniu:spark_load
+    val arr = Array[String](outputDir,hbaseTableNam)
+    
+    LoadIncrementalHFiles.main(arr)
   }
 }
 
