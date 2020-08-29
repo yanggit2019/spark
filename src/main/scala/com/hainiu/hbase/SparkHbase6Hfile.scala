@@ -1,10 +1,12 @@
 package com.hainiu.hbase
 
 import org.apache.hadoop.conf.Configuration
+import org.apache.hadoop.hbase.client.{Connection, ConnectionFactory, HTable}
 import org.apache.hadoop.hbase.io.ImmutableBytesWritable
 import org.apache.hadoop.hbase.mapreduce.HFileOutputFormat2
 import org.apache.hadoop.hbase.util.Bytes
-import org.apache.hadoop.hbase.{HBaseConfiguration, KeyValue}
+import org.apache.hadoop.hbase.{HBaseConfiguration, KeyValue, TableName}
+import org.apache.hadoop.mapreduce.Job
 import org.apache.spark.rdd.RDD
 import org.apache.spark.{SparkConf, SparkContext}
 
@@ -31,12 +33,16 @@ object SparkHbase6Hfile {
       })
       list.iterator
     })
+    //实现按照key进行二次排序
     val sortRdd: RDD[(HbaseSecondaryKey, KeyValue)] = pairRdd.sortByKey()
+    //获取能写入hfile文件的rdd
     val writeHfileRdd: RDD[(ImmutableBytesWritable, KeyValue)] = sortRdd.map(f => (f._1.rowkey, f._2))
     val hbaseConf: Configuration = HBaseConfiguration.create()
-//    val conn: Connection = ConnectionFactory.createConnection(hbaseConf)
-    
-//    HFileOutputFormat2.configureIncrementalLoad()
+    val conn: Connection = ConnectionFactory.createConnection(hbaseConf)
+    val table: HTable = conn.getTable(TableName.valueOf("lyy23:spark_load")).asInstanceOf[HTable]
+    val job: Job = Job.getInstance(hbaseConf)
+    //加载能写入hfile文件的配置
+    HFileOutputFormat2.configureIncrementalLoad(job,table.getTableDescriptor,table.getRegionLocator)
     
     val outputDir:String ="/tmp/spark/hbase"
     import com.hainiu.util.MyPredef.string2HDFSUtil
