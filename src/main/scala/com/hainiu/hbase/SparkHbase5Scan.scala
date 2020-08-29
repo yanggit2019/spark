@@ -15,6 +15,8 @@ object SparkHbase5Scan {
     val sparkConf: SparkConf = new SparkConf().setMaster("local[*]").setAppName("SparkHbase5Scan")
     val sc = new SparkContext(sparkConf)
     val scan = new Scan()
+    scan.setStartRow(Bytes.toBytes("spark_write_30"))
+    scan.setStopRow(Bytes.toBytes("spark_write_39z"))
     val hbaseConf: Configuration = HBaseConfiguration.create()
     //读取hbase表所用的表名
     hbaseConf.set(TableInputFormat.INPUT_TABLE,"lyy23:spark_user")
