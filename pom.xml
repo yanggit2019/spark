@@ -8,8 +8,9 @@
     <artifactId>hainiu_spark</artifactId>
     <version>1.0</version>
     <properties>
-            <package.mainClass>com.hainiu.sparkcore.Driver</package.mainClass>
+        <package.mainClass>com.hainiu.sparkcore.Driver</package.mainClass>
     </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.scala-lang</groupId>
@@ -116,11 +117,11 @@
                     <descriptors>
                         <descriptor>src/main/resources/assembly.xml</descriptor>
                     </descriptors>
-                    <!--                  <archive>
-                                          <manifest>
-                                              <mainClass>${package.mainClass}</mainClass>
-                                          </manifest>
-                                      </archive>-->
+                    <archive>
+                        <manifest>
+                            <mainClass>${package.mainClass}</mainClass>
+                        </manifest>
+                    </archive>
                 </configuration>
                 <executions>
                     <execution>
