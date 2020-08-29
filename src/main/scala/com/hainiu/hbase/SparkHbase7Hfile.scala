@@ -50,7 +50,7 @@ object SparkHbase7Hfile {
     //加载能写入hfile文件的配置
     HFileOutputFormat2.configureIncrementalLoad(job,table.getTableDescriptor,table.getRegionLocator)
     
-    val outputDir:String ="/tmp/spark/hbase"
+//    val outputDir:String ="/tmp/spark/hbase"
     import com.hainiu.util.MyPredef.string2HDFSUtil
     outputDir.deleteHdfs()
     writeHfileRdd.saveAsNewAPIHadoopFile(outputDir,
@@ -68,8 +68,8 @@ object SparkHbase7Hfile {
   }
 }
 
-class HbaseSecondaryKey(val rowkey:ImmutableBytesWritable,val keyValue:KeyValue) extends Ordered[HbaseSecondaryKey]{
-  override def compare(that: HbaseSecondaryKey): Int = {
+class HbaseSecondaryKey2(val rowkey:ImmutableBytesWritable,val keyValue:KeyValue) extends Ordered[HbaseSecondaryKey2]{
+  override def compare(that: HbaseSecondaryKey2): Int = {
     if (this.rowkey.compareTo(that.rowkey)==0){
       //利用KeyValue的外部比较器实现KeyValue的比较
       KeyValue.COMPARATOR.compare(this.keyValue,that.keyValue)
