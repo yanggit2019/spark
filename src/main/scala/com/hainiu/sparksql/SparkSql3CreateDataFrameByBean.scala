@@ -41,8 +41,11 @@ object SparkSql3CreateDataFrameByBean {
     val df: DataFrame = sqlc.createDataFrame(rddBean, classOf[DFBean])
     df.printSchema()
     df.show()
+    //通过把DataFrame的数据集创建临时视图来通过SQL查询方式来执行程序
     //select country，count(*) as count_num from XXX group by country
+    //通过Beanclass来构建DataFrame,这个beanclass必须定义属性的getXXX方法
     df.createOrReplaceTempView("df_table")
+    //根据临时视图名称来写SQL执行
     val groupByDf: DataFrame = sqlc.sql("select country,count(*) as count_num from df_table group by country")
     groupByDf.printSchema()
     groupByDf.show()
