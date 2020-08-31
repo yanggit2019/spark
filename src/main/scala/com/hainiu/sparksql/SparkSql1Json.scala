@@ -34,11 +34,13 @@ object SparkSql1Json {
     val rdd: RDD[Row] = groupByDF.rdd
     //rdd[Row] --> rdd[String] String 里是“CN 2”
     val rdd2: RDD[String] = rdd.map(row => {
+      //提取row里面的数据方法
       s"${row.getString(0)}\t${row.getLong(1)}"
     })
-    
+    //把200个分区降成一个
+    val rdd3: RDD[String] = rdd2.coalesce(1)
     val outputDir:String = "/tmp/sparksql/output_json"
     outputDir.deleteHdfs()
-    rdd2.saveAsTextFile(outputDir)
+    rdd3.saveAsTextFile(outputDir)
   }
 }
