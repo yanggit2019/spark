@@ -25,7 +25,7 @@ object SparkSql5ReadOrc {
     df.createOrReplaceTempView("df_table")
     val sql =
       """
-        |select country,num from
+        |select concat(country,num) as country_num from
         |(select country,count(*) as num from df_table group by country) t
         |where t.num > 5
         |""".stripMargin
