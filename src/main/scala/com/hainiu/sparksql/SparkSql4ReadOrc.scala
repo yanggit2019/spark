@@ -1,6 +1,6 @@
 package com.hainiu.sparksql
 
-import org.apache.spark.sql.{DataFrame, Dataset, Row, SQLContext}
+import org.apache.spark.sql.{DataFrame, Dataset, Row, SQLContext, SaveMode}
 import org.apache.spark.{SparkConf, SparkContext}
 
 object SparkSql4ReadOrc {
@@ -22,7 +22,13 @@ object SparkSql4ReadOrc {
     //where t.num > 5
     val groupByDF: DataFrame = df.groupBy("country").count()
     val filterDF: Dataset[Row] = groupByDF.filter(groupByDF("count") > 5)
-    filterDF.printSchema()
-    filterDF.show()
+//    filterDF.printSchema()
+//    filterDF.show()
+    //默认的缓存级别是MEMORY_AND_DISK
+    val cacheDF: filterDF.type = filterDF.cache()
+    //写入orc文件
+    cacheDF.write.mode(SaveMode.Overwrite).format("orc").save("/tmp/sparksql/output_orc")
+    //写入json文件
+    cacheDF.write.mode(SaveMode.Overwrite).format("json").save("/tmp/sparksql/output_json")
   }
 }
