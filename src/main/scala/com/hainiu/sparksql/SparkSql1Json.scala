@@ -14,5 +14,12 @@ object SparkSql1Json {
     val df: DataFrame = sqlc.read.json("H:\\input_json")
     df.printSchema()
     df.show()
+    
+    //查看country列中的内容
+    df.select(df.apply("country")).show()
+    df.select(df("country")).show()
+    df.select("country","num").show()
+    //查询所有country和num,并把num+1
+    
   }
 }
