@@ -20,6 +20,6 @@ object SparkSql1Json {
     df.select(df("country")).show()
     df.select("country","num").show()
     //查询所有country和num,并把num+1
-    
+    df.select(df("country"),(df("num")+1).as("num1")).show()
   }
 }
