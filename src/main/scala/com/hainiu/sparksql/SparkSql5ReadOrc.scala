@@ -32,6 +32,8 @@ object SparkSql5ReadOrc {
     val redDs: DataFrame = hqlc.sql(sql)
     redDs.printSchema()
     redDs.show()
+    //覆盖以文本形式写入文件
+    redDs.write.mode(SaveMode.Overwrite).format("text").save("/tmp/sparksql/output_text5")
     
   }
 }
