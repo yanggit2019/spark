@@ -7,6 +7,11 @@ import org.apache.spark.{SparkConf, SparkContext}
 
 import scala.collection.mutable.ArrayBuffer
 class DFBean(val country: String,val gpcategory:String,val pkgname:String,val num:Int){
+  //定义getXXX的方法，比如getCountry的方法，框架会通过反射的方式，用属性拼接方法，调用该方法
+  def getCountry = this.country
+  def getGpcategory=this.gpcategory
+  def getPkgname = this.pkgname
+  def getNum = this.num
   
 }
 object SparkSql3CreateDataFrameByBean {
@@ -38,7 +43,7 @@ object SparkSql3CreateDataFrameByBean {
     df.show()
     //select country，count(*) as count_num from XXX group by country
     df.createOrReplaceTempView("df_table")
-    val groupByDf: DataFrame = sqlc.sql("select country，count(*) as count_num from df_table group by country")
+    val groupByDf: DataFrame = sqlc.sql("select country,count(*) as count_num from df_table group by country")
     groupByDf.printSchema()
     groupByDf.show()
   }
