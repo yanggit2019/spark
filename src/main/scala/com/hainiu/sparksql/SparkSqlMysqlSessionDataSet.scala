@@ -33,6 +33,10 @@ object SparkSqlMysqlSessionDataSet {
       case _ => HainiuSparkDataSet("None")
     }
     ds.show()
+    //转成dataframe
+//    ds.toDF()
+    //转成rdd
+//    ds.rdd
   }
 }
 
