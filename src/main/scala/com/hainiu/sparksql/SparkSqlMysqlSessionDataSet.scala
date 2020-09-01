@@ -1,23 +1,18 @@
 package com.hainiu.sparksql
 
 import com.mysql.jdbc.Driver
-import org.apache.spark.sql.{DataFrame, SparkSession}
+import org.apache.spark.sql.catalyst.expressions.GenericRow
+import org.apache.spark.sql.{DataFrame, Dataset, Row, SparkSession}
 
-object SparkSqlMysqlSession {
+object SparkSqlMysqlSessionDataSet {
   def main(args: Array[String]): Unit = {
-//    val conf = new SparkConf()
-//    conf.setAppName("SparkSqlMysqlSession")
-//    conf.setMaster("local[*]")
-//    conf.set("spark.sql.shuffle.partitions","1")
-//
-//    val session: SparkSession = SparkSession.builder().config(conf).getOrCreate()
     val session: SparkSession = SparkSession.builder()
       .config("spark.sql.shuffle.partitions", "1")
       .config("spark.master", "local[*]")
       .appName("SparkSqlMysqlSession").getOrCreate()
-    
+
     import session.implicits._
-    
+
     val data: DataFrame = session.read.format("jdbc")
       .option("driver", classOf[Driver].getName)
       .option("url", "jdbc:mysql://nn2.hadoop:3306/hainiucralwer")
@@ -25,14 +20,20 @@ object SparkSqlMysqlSession {
       .option("user", "hainiu")
       .option("password", "12345678").load()
     
+    data.createOrReplaceTempView("temp")
+    val mysqlRow: DataFrame = session.sql("select host from temp")
     
-    data.createOrReplaceTempView("tmp")
-
-    val row: DataFrame = session.sql("select host from tmp")
-    
-    row.show()
-    
-    
+//    mysqlRow.map( r =>{
+//      val host: String = r.getString(0)
+//      host
+//    })
+    import session.implicits._
+    val ds: Dataset[HainiuSparkDataSet] = mysqlRow map {
+      case host: Row => HainiuSparkDataSet(s"hainiu_${host.mkString}")
+      case _ => HainiuSparkDataSet("None")
+    }
+    ds.show()
   }
-  
 }
+
+case class HainiuSparkDataSet(val host:String)
