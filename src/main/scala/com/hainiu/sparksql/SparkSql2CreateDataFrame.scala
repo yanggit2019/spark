@@ -35,6 +35,7 @@ object SparkSql2CreateDataFrame {
     df.printSchema()
     df.show()
     //select country，count(*) as count_num from XXX group by country
+    
     val groupByDF: DataFrame = df.groupBy("country").count()
     groupByDF.show()
   }

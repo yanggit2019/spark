@@ -32,6 +32,7 @@ object SparkSqlMysqlSessionDataSet {
       case host: Row => HainiuSparkDataSet(s"hainiu_${host.mkString}")
       case _ => HainiuSparkDataSet("None")
     }
+    
     ds.show()
     //转成dataframe
 //    ds.toDF()
